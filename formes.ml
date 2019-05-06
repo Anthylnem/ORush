@@ -76,6 +76,9 @@ let click event =
   draw_rect etat_jeu.cur_boat
 
 let is_win () =
+  let mv = Document.get_element_by_id document "mv" in
+  let txt = Char.escaped(etat_jeu.cur_boat.identifiant) in
+  Element.set_text_content mv txt;
   if win etat_jeu.port then
     let haut = Document.get_element_by_id document "haut" in
     Element.set_attribute haut "disabled" "";
@@ -142,7 +145,10 @@ let solver () =
   Element.set_text_content soluce solution;
   let i = ref 0 in
   while !i<=(String.length solution -2) do
-    etat_jeu.cur_boat <- List.find(fun boat -> (boat.identifiant = solution.[!i])) etat_jeu.port ;
+    (*Find n'arrive pas à trouver le bon bateau *)
+    let c = solution.[!i] in
+    let boat = List.find(fun boat -> (boat.identifiant = c)) etat_jeu.port in
+    etat_jeu.cur_boat <- boat;
     match solution.[!i+1] with
     |'>' -> click_avance ()
     | _  -> click_recule ();
