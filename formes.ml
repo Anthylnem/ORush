@@ -60,6 +60,7 @@ let refresh () =
     |_ , [] -> ()
     |hb::tb, hc::tc -> draw_boat context hb hc; draw_color tb tc
   in
+  (* ? etat_jeu.port_init ? *)
   draw_color etat_jeu.port colors;
   draw_rect etat_jeu.cur_boat
 
