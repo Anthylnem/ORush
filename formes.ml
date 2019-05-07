@@ -6,13 +6,28 @@ open Solver
 
 type etat = { mutable port : state;
               mutable cur_boat : boat;
-              mutable port_init : state}
+              mutable port_init : state;
+              mutable solution : string}
 
 let init_boat = boat_of_string "A2H12"
-let etat_jeu = {port = []; cur_boat = init_boat; port_init = []}
+let etat_jeu = {port = []; cur_boat = init_boat; port_init = []; solution=""}
 let cpt = ref 0
-    (*bleu,vert,violet,jaune,cyan*)
-let colors = ["#26A6FF";"#4DC136";"#C136BE";"#FFD109";"#3CEAEA"]
+let colors = Hashtbl.create 13
+
+let init_colors () =
+  Hashtbl.add colors 'A' "#FF2626"; (* ROUGE *)
+  Hashtbl.add colors 'B' "#26A6FF"; (* BLEU *)
+  Hashtbl.add colors 'C' "#4DC136"; (* VERT *)
+  Hashtbl.add colors 'D' "#C136BE"; (* VIOLET *)
+  Hashtbl.add colors 'E' "#FFD109"; (* JAUNE *)
+  Hashtbl.add colors 'F' "#3CEAEA"; (* CYAN *)
+  Hashtbl.add colors 'G' "#E033C6"; (* ROSE *)
+  Hashtbl.add colors 'H' "#FFBC12"; (* ORANGE *)
+  Hashtbl.add colors 'I' "#FA8072"; (* SAUMON *)
+  Hashtbl.add colors 'J' "#4B0082"; (* INDIGO *)
+  Hashtbl.add colors 'K' "#006400"; (* DARKGREEN *)
+  Hashtbl.add colors 'L' "#F5DEB3"; (* WHEAT *)
+  Hashtbl.add colors 'M' "#8B0000"  (* DARKRED *)
 
 (*Recuperation du context graphique du canvas*)
 let get_context =
@@ -20,12 +35,15 @@ let get_context =
   Canvas.get_context_2d (Canvas.of_element canvas)
 
 (*Dessiner un bateau suivant son orientation*)
-let draw_boat context boat color=
-  Canvas.RenderingContext2D.set_fill_style context color;                         (*ROUGE*)
-  if boat.identifiant = 'A' then Canvas.RenderingContext2D.set_fill_style context "#FF2626";
-  match boat.orientation with
-  |'V' -> Canvas.RenderingContext2D.fill_rect context (boat.x*100) (boat.y*100) 100 (boat.longueur*100)
-  | _  -> Canvas.RenderingContext2D.fill_rect context (boat.x*100) (boat.y*100) (boat.longueur*100) 100
+let draw_boat context l color=
+  Canvas.RenderingContext2D.set_fill_style context color;
+  try
+    let boat = List.find (fun boat -> (boat.identifiant = l)) etat_jeu.port in
+    match boat.orientation with
+    |'V' -> Canvas.RenderingContext2D.fill_rect context (boat.x*100) (boat.y*100) 100 (boat.longueur*100)
+    | _  -> Canvas.RenderingContext2D.fill_rect context (boat.x*100) (boat.y*100) (boat.longueur*100) 100
+  with Not_found -> ()
+
 
 (*Affichage de la grille du Port*)
 let draw_grid context =
@@ -54,14 +72,8 @@ let refresh () =
   Canvas.RenderingContext2D.set_fill_style context "white";
   Canvas.RenderingContext2D.fill_rect context 0 0 600 600;
   draw_grid context;
-  let rec draw_color b c =
-    match b,c with
-    |[],_ -> ()
-    |_ , [] -> ()
-    |hb::tb, hc::tc -> draw_boat context hb hc; draw_color tb tc
-  in
-  (* ? etat_jeu.port_init ? *)
-  draw_color etat_jeu.port colors;
+
+  Hashtbl.iter (fun l c -> draw_boat context l c) colors;
   draw_rect etat_jeu.cur_boat
 
 let click event =
@@ -77,9 +89,6 @@ let click event =
   draw_rect etat_jeu.cur_boat
 
 let is_win () =
-  let mv = Document.get_element_by_id document "mv" in
-  let txt = Char.escaped(etat_jeu.cur_boat.identifiant) in
-  Element.set_text_content mv txt;
   if win etat_jeu.port then
     let haut = Document.get_element_by_id document "haut" in
     Element.set_attribute haut "disabled" "";
@@ -141,28 +150,55 @@ let add_state () =
   Element.set_attribute sub "disabled" ""
 
 let solver () =
-  let solution = solve_state etat_jeu.port_init in
+  let solution = solve_state etat_jeu.port in
   let soluce = Document.get_element_by_id document "solution" in
   Element.set_text_content soluce solution;
-  let i = ref 0 in
-  while !i<=(String.length solution -2) do
-    (*Find n'arrive pas à trouver le bon bateau *)
-    let c = solution.[!i] in
-    let boat = List.find(fun boat -> (boat.identifiant = c)) etat_jeu.port in
-    etat_jeu.cur_boat <- boat;
-    match solution.[!i+1] with
+  etat_jeu.solution <- solution
+
+let next_move () =
+  let solution = etat_jeu.solution in
+  let size = String.length solution in
+
+  if size >= 2 then
+    let move = String.sub solution 0 2 in
+    etat_jeu.solution <- String.sub solution 2 (size-2);
+    etat_jeu.cur_boat <- List.find(fun boat -> (boat.identifiant = move.[0])) etat_jeu.port;
+    match move.[1] with
     |'>' -> click_avance ()
-    | _  -> click_recule ();
+    | _  -> click_recule ()
+
+  else
+    let solve = Document.get_element_by_id document "solve" in
+    Element.set_attribute solve "disabled" ""
+
+let finisher () =
+  let solution = etat_jeu.solution in
+  etat_jeu.solution <- solution;
+  let i = ref 0 in
+    while !i<=(String.length solution -2) do
+    etat_jeu.cur_boat <- List.find(fun boat -> (boat.identifiant = solution.[!i])) etat_jeu.port;
+    (match solution.[!i+1] with
+    |'>' -> click_avance ()
+    | _  -> click_recule ());
     i := !i+2
-  done
+  done;
+  let solve = Document.get_element_by_id document "solve" in
+  Element.set_attribute solve "disabled" ""
+
 
 let main () =
-
+  init_colors ();
   (*Obligation de création de plusieurs methodes car impossible de passer
     des valeurs en argument dans le listener*)
 
   let solve = Document.get_element_by_id document "solve" in
   Element.set_onclick solve solver;
+
+  let next = Document.get_element_by_id document "next" in
+  Element.set_onclick next next_move;
+
+  let finish = Document.get_element_by_id document "finish" in
+  Element.set_onclick finish finisher;
 
   let submit = Document.get_element_by_id document "submit" in
   Element.set_onclick submit add_state;
