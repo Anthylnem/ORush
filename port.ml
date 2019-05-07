@@ -117,6 +117,8 @@ let stateCopy (state:state) =
     |[] -> newS
     |hb::lb -> build lb ((boatCopy hb)::newS)
   in build state []
+
+
     (*
 let ()=
   let btest =  boat_of_string "A2H12" in

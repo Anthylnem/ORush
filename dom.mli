@@ -15,6 +15,9 @@ module Event : sig
   val screen_x: t -> int (* mouse *)
   val screen_y: t -> int (* mouse *)
 
+  val offset_x: t -> int (* mouse *)
+  val offset_y: t -> int (* mouse *)
+
   val buttons: t -> int  (* mouse *)
 
   val alt_key: t -> bool (* key *)
@@ -43,6 +46,7 @@ module Element : sig
   val get_attribute: t -> string -> string
   val set_attribute: t -> string -> string -> unit
   val set_onclick: t -> (unit -> unit) -> unit
+  val disabled: t -> bool -> unit
 
   val value: t (* <input> *) -> string
 
@@ -57,6 +61,26 @@ module Element : sig
 
   val width: t -> int
   val height: t -> int
+end
+
+module Element2 : sig
+  (* Only arguments marked with a "T" may be a textNode. *)
+  (* When element arguments are required to be a specific element,
+      it is marked with <tag> (where 'tag' is the element's tag name). *)
+
+  type t
+  val t_of_js: Ojs.t -> t
+  val t_to_js: t -> Ojs.t
+  val set_attribute: t -> string -> bool -> unit
+
+end
+
+module Document2: sig
+  type t
+  val t_of_js: Ojs.t -> t
+  val t_to_js: t -> Ojs.t
+
+  val get_element_by_id: t -> string -> Element2.t
 end
 
 module Document: sig
@@ -98,6 +122,8 @@ module Canvas : sig
     val stroke: t -> unit
     val arc: t -> int -> int -> int -> int -> float -> unit
     val begin_path: t -> unit
+    val font: t -> string -> unit
+    val fillText: t -> string -> int -> int -> unit
   end
 
   type t = private Ojs.t
@@ -118,3 +144,4 @@ end
 
 val window: Window.t
 val document: Document.t
+val document2: Document2.t

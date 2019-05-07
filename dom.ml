@@ -19,234 +19,285 @@ module Event =
       fun x9 -> Ojs.int_of_js (Ojs.get (t_to_js x9) "screenX")
     let (screen_y : t -> int) =
       fun x10 -> Ojs.int_of_js (Ojs.get (t_to_js x10) "screenY")
+    let (offset_x : t -> int) =
+      fun x11 -> Ojs.int_of_js (Ojs.get (t_to_js x11) "offsetX")
+    let (offset_y : t -> int) =
+      fun x12 -> Ojs.int_of_js (Ojs.get (t_to_js x12) "offsetY")
     let (buttons : t -> int) =
-      fun x11 -> Ojs.int_of_js (Ojs.get (t_to_js x11) "buttons")
+      fun x13 -> Ojs.int_of_js (Ojs.get (t_to_js x13) "buttons")
     let (alt_key : t -> bool) =
-      fun x12 -> Ojs.bool_of_js (Ojs.get (t_to_js x12) "altKey")
+      fun x14 -> Ojs.bool_of_js (Ojs.get (t_to_js x14) "altKey")
     let (ctrl_key : t -> bool) =
-      fun x13 -> Ojs.bool_of_js (Ojs.get (t_to_js x13) "ctrlKey")
+      fun x15 -> Ojs.bool_of_js (Ojs.get (t_to_js x15) "ctrlKey")
     let (shift_key : t -> bool) =
-      fun x14 -> Ojs.bool_of_js (Ojs.get (t_to_js x14) "shiftKey")
+      fun x16 -> Ojs.bool_of_js (Ojs.get (t_to_js x16) "shiftKey")
     let (which : t -> int) =
-      fun x15 -> Ojs.int_of_js (Ojs.get (t_to_js x15) "which")
+      fun x17 -> Ojs.int_of_js (Ojs.get (t_to_js x17) "which")
     let (code : t -> string) =
-      fun x16 -> Ojs.string_of_js (Ojs.get (t_to_js x16) "code")
+      fun x18 -> Ojs.string_of_js (Ojs.get (t_to_js x18) "code")
     let (key : t -> string) =
-      fun x17 -> Ojs.string_of_js (Ojs.get (t_to_js x17) "key")
+      fun x19 -> Ojs.string_of_js (Ojs.get (t_to_js x19) "key")
   end
 module Element =
   struct
     type t = Ojs.t
-    let rec (t_of_js : Ojs.t -> t) = fun x19 -> x19
-    and (t_to_js : t -> Ojs.t) = fun x18 -> x18
+    let rec (t_of_js : Ojs.t -> t) = fun x21 -> x21
+    and (t_to_js : t -> Ojs.t) = fun x20 -> x20
     let (t_of_js : Ojs.t -> t) = t_of_js
     let (t_to_js : t -> Ojs.t) = t_to_js
     let (append_child : t -> t -> unit) =
-      fun x23 ->
-        fun x22 ->
-          ignore (Ojs.call (t_to_js x23) "appendChild" [|(t_to_js x22)|])
+      fun x25 ->
+        fun x24 ->
+          ignore (Ojs.call (t_to_js x25) "appendChild" [|(t_to_js x24)|])
     let (add_event_listener :
       t -> string -> (Event.t -> unit) -> bool -> unit) =
-      fun x28 ->
-        fun x24 ->
-          fun x25 ->
-            fun x27 ->
-              ignore
-                (Ojs.call (t_to_js x28) "addEventListener"
-                   [|(Ojs.string_to_js x24);(Ojs.fun_to_js 1
-                                               (fun x26 ->
-                                                  x25 (Event.t_of_js x26)));(
-                     Ojs.bool_to_js x27)|])
-    let (get_elements_by_tag_name : t -> string -> t array) =
       fun x30 ->
-        fun x29 ->
+        fun x26 ->
+          fun x27 ->
+            fun x29 ->
+              ignore
+                (Ojs.call (t_to_js x30) "addEventListener"
+                   [|(Ojs.string_to_js x26);(Ojs.fun_to_js 1
+                                               (fun x28 ->
+                                                  x27 (Event.t_of_js x28)));(
+                     Ojs.bool_to_js x29)|])
+    let (get_elements_by_tag_name : t -> string -> t array) =
+      fun x32 ->
+        fun x31 ->
           Ojs.array_of_js t_of_js
-            (Ojs.call (t_to_js x30) "getElementsByTagName"
-               [|(Ojs.string_to_js x29)|])
+            (Ojs.call (t_to_js x32) "getElementsByTagName"
+               [|(Ojs.string_to_js x31)|])
     let (has_attribute : t -> string -> bool) =
-      fun x33 ->
-        fun x32 ->
-          Ojs.bool_of_js
-            (Ojs.call (t_to_js x33) "hasAttribute" [|(Ojs.string_to_js x32)|])
-    let (get_attribute : t -> string -> string) =
       fun x35 ->
         fun x34 ->
-          Ojs.string_of_js
-            (Ojs.call (t_to_js x35) "getAttribute" [|(Ojs.string_to_js x34)|])
-    let (set_attribute : t -> string -> string -> unit) =
-      fun x38 ->
+          Ojs.bool_of_js
+            (Ojs.call (t_to_js x35) "hasAttribute" [|(Ojs.string_to_js x34)|])
+    let (get_attribute : t -> string -> string) =
+      fun x37 ->
         fun x36 ->
-          fun x37 ->
+          Ojs.string_of_js
+            (Ojs.call (t_to_js x37) "getAttribute" [|(Ojs.string_to_js x36)|])
+    let (set_attribute : t -> string -> string -> unit) =
+      fun x40 ->
+        fun x38 ->
+          fun x39 ->
             ignore
-              (Ojs.call (t_to_js x38) "setAttribute"
-                 [|(Ojs.string_to_js x36);(Ojs.string_to_js x37)|])
+              (Ojs.call (t_to_js x40) "setAttribute"
+                 [|(Ojs.string_to_js x38);(Ojs.string_to_js x39)|])
     let (set_onclick : t -> (unit -> unit) -> unit) =
-      fun x39 ->
-        fun x40 ->
-          Ojs.set (t_to_js x39) "onclick" (Ojs.fun_to_js 1 (fun _ -> x40 ()))
-    let (value : t -> string) =
-      fun x41 -> Ojs.string_of_js (Ojs.get (t_to_js x41) "value")
-    let (selected_index : t -> int) =
-      fun x42 -> Ojs.int_of_js (Ojs.get (t_to_js x42) "selectedIndex")
-    let (checked : t -> bool) =
-      fun x43 -> Ojs.bool_of_js (Ojs.get (t_to_js x43) "checked")
-    let (set_checked : t -> bool -> unit) =
+      fun x41 ->
+        fun x42 ->
+          Ojs.set (t_to_js x41) "onclick" (Ojs.fun_to_js 1 (fun _ -> x42 ()))
+    let (disabled : t -> bool -> unit) =
       fun x44 ->
-        fun x45 -> Ojs.set (t_to_js x44) "checked" (Ojs.bool_to_js x45)
-    let (set_text_content : t -> string -> unit) =
-      fun x46 ->
-        fun x47 -> Ojs.set (t_to_js x46) "textContent" (Ojs.string_to_js x47)
-    let (set_class_name : t -> string -> unit) =
+        fun x43 ->
+          ignore (Ojs.call (t_to_js x44) "disabled" [|(Ojs.bool_to_js x43)|])
+    let (value : t -> string) =
+      fun x45 -> Ojs.string_of_js (Ojs.get (t_to_js x45) "value")
+    let (selected_index : t -> int) =
+      fun x46 -> Ojs.int_of_js (Ojs.get (t_to_js x46) "selectedIndex")
+    let (checked : t -> bool) =
+      fun x47 -> Ojs.bool_of_js (Ojs.get (t_to_js x47) "checked")
+    let (set_checked : t -> bool -> unit) =
       fun x48 ->
-        fun x49 -> Ojs.set (t_to_js x48) "className" (Ojs.string_to_js x49)
+        fun x49 -> Ojs.set (t_to_js x48) "checked" (Ojs.bool_to_js x49)
+    let (set_text_content : t -> string -> unit) =
+      fun x50 ->
+        fun x51 -> Ojs.set (t_to_js x50) "textContent" (Ojs.string_to_js x51)
+    let (set_class_name : t -> string -> unit) =
+      fun x52 ->
+        fun x53 -> Ojs.set (t_to_js x52) "className" (Ojs.string_to_js x53)
     let (class_name : t -> string) =
-      fun x50 -> Ojs.string_of_js (Ojs.get (t_to_js x50) "className")
+      fun x54 -> Ojs.string_of_js (Ojs.get (t_to_js x54) "className")
     let (width : t -> int) =
-      fun x51 -> Ojs.int_of_js (Ojs.get (t_to_js x51) "width")
+      fun x55 -> Ojs.int_of_js (Ojs.get (t_to_js x55) "width")
     let (height : t -> int) =
-      fun x52 -> Ojs.int_of_js (Ojs.get (t_to_js x52) "height")
+      fun x56 -> Ojs.int_of_js (Ojs.get (t_to_js x56) "height")
+  end
+module Element2 =
+  struct
+    type t = Ojs.t
+    let rec (t_of_js : Ojs.t -> t) = fun x58 -> x58
+    and (t_to_js : t -> Ojs.t) = fun x57 -> x57
+    let (t_of_js : Ojs.t -> t) = t_of_js
+    let (t_to_js : t -> Ojs.t) = t_to_js
+    let (set_attribute : t -> string -> bool -> unit) =
+      fun x63 ->
+        fun x61 ->
+          fun x62 ->
+            ignore
+              (Ojs.call (t_to_js x63) "setAttribute"
+                 [|(Ojs.string_to_js x61);(Ojs.bool_to_js x62)|])
+  end
+module Document2 =
+  struct
+    type t = Ojs.t
+    let rec (t_of_js : Ojs.t -> t) = fun x65 -> x65
+    and (t_to_js : t -> Ojs.t) = fun x64 -> x64
+    let (t_of_js : Ojs.t -> t) = t_of_js
+    let (t_to_js : t -> Ojs.t) = t_to_js
+    let (get_element_by_id : t -> string -> Element2.t) =
+      fun x69 ->
+        fun x68 ->
+          Element2.t_of_js
+            (Ojs.call (t_to_js x69) "getElementById"
+               [|(Ojs.string_to_js x68)|])
   end
 module Document =
   struct
     type t = Ojs.t
-    let rec (t_of_js : Ojs.t -> t) = fun x54 -> x54
-    and (t_to_js : t -> Ojs.t) = fun x53 -> x53
+    let rec (t_of_js : Ojs.t -> t) = fun x71 -> x71
+    and (t_to_js : t -> Ojs.t) = fun x70 -> x70
     let (t_of_js : Ojs.t -> t) = t_of_js
     let (t_to_js : t -> Ojs.t) = t_to_js
     let (create_element : t -> string -> Element.t) =
-      fun x58 ->
-        fun x57 ->
+      fun x75 ->
+        fun x74 ->
           Element.t_of_js
-            (Ojs.call (t_to_js x58) "createElement"
-               [|(Ojs.string_to_js x57)|])
+            (Ojs.call (t_to_js x75) "createElement"
+               [|(Ojs.string_to_js x74)|])
     let (create_text_node : t -> string -> Element.t) =
-      fun x60 ->
-        fun x59 ->
+      fun x77 ->
+        fun x76 ->
           Element.t_of_js
-            (Ojs.call (t_to_js x60) "createTextNode"
-               [|(Ojs.string_to_js x59)|])
+            (Ojs.call (t_to_js x77) "createTextNode"
+               [|(Ojs.string_to_js x76)|])
     let (get_element_by_id : t -> string -> Element.t) =
-      fun x62 ->
-        fun x61 ->
+      fun x79 ->
+        fun x78 ->
           Element.t_of_js
-            (Ojs.call (t_to_js x62) "getElementById"
-               [|(Ojs.string_to_js x61)|])
+            (Ojs.call (t_to_js x79) "getElementById"
+               [|(Ojs.string_to_js x78)|])
     let (get_elements_by_class_name : t -> string -> Element.t array) =
-      fun x64 ->
-        fun x63 ->
+      fun x81 ->
+        fun x80 ->
           Ojs.array_of_js Element.t_of_js
-            (Ojs.call (t_to_js x64) "getElementsByClassName"
-               [|(Ojs.string_to_js x63)|])
+            (Ojs.call (t_to_js x81) "getElementsByClassName"
+               [|(Ojs.string_to_js x80)|])
     let (body : t -> Element.t) =
-      fun x66 -> Element.t_of_js (Ojs.get (t_to_js x66) "body")
+      fun x83 -> Element.t_of_js (Ojs.get (t_to_js x83) "body")
     let (set_title : t -> string -> unit) =
-      fun x67 ->
-        fun x68 -> Ojs.set (t_to_js x67) "title" (Ojs.string_to_js x68)
+      fun x84 ->
+        fun x85 -> Ojs.set (t_to_js x84) "title" (Ojs.string_to_js x85)
   end
 module Window =
   struct
     type t = Ojs.t
-    let rec (t_of_js : Ojs.t -> t) = fun x70 -> x70
-    and (t_to_js : t -> Ojs.t) = fun x69 -> x69
+    let rec (t_of_js : Ojs.t -> t) = fun x87 -> x87
+    and (t_to_js : t -> Ojs.t) = fun x86 -> x86
     let (t_of_js : Ojs.t -> t) = t_of_js
     let (t_to_js : t -> Ojs.t) = t_to_js
     let (add_event_listener :
       t -> string -> (Event.t -> unit) -> bool -> unit) =
-      fun x77 ->
-        fun x73 ->
-          fun x74 ->
-            fun x76 ->
+      fun x94 ->
+        fun x90 ->
+          fun x91 ->
+            fun x93 ->
               ignore
-                (Ojs.call (t_to_js x77) "addEventListener"
-                   [|(Ojs.string_to_js x73);(Ojs.fun_to_js 1
-                                               (fun x75 ->
-                                                  x74 (Event.t_of_js x75)));(
-                     Ojs.bool_to_js x76)|])
+                (Ojs.call (t_to_js x94) "addEventListener"
+                   [|(Ojs.string_to_js x90);(Ojs.fun_to_js 1
+                                               (fun x92 ->
+                                                  x91 (Event.t_of_js x92)));(
+                     Ojs.bool_to_js x93)|])
   end
 module Canvas =
   struct
     module RenderingContext2D =
       struct
         type t = Ojs.t
-        let rec (t_of_js : Ojs.t -> t) = fun x79 -> x79
-        and (t_to_js : t -> Ojs.t) = fun x78 -> x78
+        let rec (t_of_js : Ojs.t -> t) = fun x96 -> x96
+        and (t_to_js : t -> Ojs.t) = fun x95 -> x95
         let (line_width : t -> float -> unit) =
-          fun x81 ->
-            fun x80 ->
-              ignore
-                (Ojs.call (t_to_js x81) "lineWidth" [|(Ojs.float_to_js x80)|])
-        let (set_fill_style : t -> string -> unit) =
-          fun x82 ->
-            fun x83 ->
-              Ojs.set (t_to_js x82) "fillStyle" (Ojs.string_to_js x83)
-        let (set_stroke_style : t -> string -> unit) =
-          fun x84 ->
-            fun x85 ->
-              Ojs.set (t_to_js x84) "strokeStyle" (Ojs.string_to_js x85)
-        let (fill_rect : t -> int -> int -> int -> int -> unit) =
-          fun x90 ->
-            fun x86 ->
-              fun x87 ->
-                fun x88 ->
-                  fun x89 ->
-                    ignore
-                      (Ojs.call (t_to_js x90) "fillRect"
-                         [|(Ojs.int_to_js x86);(Ojs.int_to_js x87);(Ojs.int_to_js
-                                                                    x88);(
-                           Ojs.int_to_js x89)|])
-        let (stroke_rect : t -> int -> int -> int -> int -> unit) =
-          fun x95 ->
-            fun x91 ->
-              fun x92 ->
-                fun x93 ->
-                  fun x94 ->
-                    ignore
-                      (Ojs.call (t_to_js x95) "strokeRect"
-                         [|(Ojs.int_to_js x91);(Ojs.int_to_js x92);(Ojs.int_to_js
-                                                                    x93);(
-                           Ojs.int_to_js x94)|])
-        let (line_to : t -> int -> int -> unit) =
           fun x98 ->
-            fun x96 ->
-              fun x97 ->
-                ignore
-                  (Ojs.call (t_to_js x98) "lineTo"
-                     [|(Ojs.int_to_js x96);(Ojs.int_to_js x97)|])
-        let (move_to : t -> int -> int -> unit) =
+            fun x97 ->
+              ignore
+                (Ojs.call (t_to_js x98) "lineWidth" [|(Ojs.float_to_js x97)|])
+        let (set_fill_style : t -> string -> unit) =
+          fun x99 ->
+            fun x100 ->
+              Ojs.set (t_to_js x99) "fillStyle" (Ojs.string_to_js x100)
+        let (set_stroke_style : t -> string -> unit) =
           fun x101 ->
-            fun x99 ->
-              fun x100 ->
-                ignore
-                  (Ojs.call (t_to_js x101) "moveTo"
-                     [|(Ojs.int_to_js x99);(Ojs.int_to_js x100)|])
-        let (stroke : t -> unit) =
-          fun x102 -> ignore (Ojs.call (t_to_js x102) "stroke" [||])
-        let (arc : t -> int -> int -> int -> int -> float -> unit) =
-          fun x108 ->
+            fun x102 ->
+              Ojs.set (t_to_js x101) "strokeStyle" (Ojs.string_to_js x102)
+        let (fill_rect : t -> int -> int -> int -> int -> unit) =
+          fun x107 ->
             fun x103 ->
               fun x104 ->
                 fun x105 ->
                   fun x106 ->
-                    fun x107 ->
+                    ignore
+                      (Ojs.call (t_to_js x107) "fillRect"
+                         [|(Ojs.int_to_js x103);(Ojs.int_to_js x104);(
+                           Ojs.int_to_js x105);(Ojs.int_to_js x106)|])
+        let (stroke_rect : t -> int -> int -> int -> int -> unit) =
+          fun x112 ->
+            fun x108 ->
+              fun x109 ->
+                fun x110 ->
+                  fun x111 ->
+                    ignore
+                      (Ojs.call (t_to_js x112) "strokeRect"
+                         [|(Ojs.int_to_js x108);(Ojs.int_to_js x109);(
+                           Ojs.int_to_js x110);(Ojs.int_to_js x111)|])
+        let (line_to : t -> int -> int -> unit) =
+          fun x115 ->
+            fun x113 ->
+              fun x114 ->
+                ignore
+                  (Ojs.call (t_to_js x115) "lineTo"
+                     [|(Ojs.int_to_js x113);(Ojs.int_to_js x114)|])
+        let (move_to : t -> int -> int -> unit) =
+          fun x118 ->
+            fun x116 ->
+              fun x117 ->
+                ignore
+                  (Ojs.call (t_to_js x118) "moveTo"
+                     [|(Ojs.int_to_js x116);(Ojs.int_to_js x117)|])
+        let (stroke : t -> unit) =
+          fun x119 -> ignore (Ojs.call (t_to_js x119) "stroke" [||])
+        let (arc : t -> int -> int -> int -> int -> float -> unit) =
+          fun x125 ->
+            fun x120 ->
+              fun x121 ->
+                fun x122 ->
+                  fun x123 ->
+                    fun x124 ->
                       ignore
-                        (Ojs.call (t_to_js x108) "arc"
-                           [|(Ojs.int_to_js x103);(Ojs.int_to_js x104);(
-                             Ojs.int_to_js x105);(Ojs.int_to_js x106);(
-                             Ojs.float_to_js x107)|])
+                        (Ojs.call (t_to_js x125) "arc"
+                           [|(Ojs.int_to_js x120);(Ojs.int_to_js x121);(
+                             Ojs.int_to_js x122);(Ojs.int_to_js x123);(
+                             Ojs.float_to_js x124)|])
         let (begin_path : t -> unit) =
-          fun x109 -> ignore (Ojs.call (t_to_js x109) "beginPath" [||])
+          fun x126 -> ignore (Ojs.call (t_to_js x126) "beginPath" [||])
+        let (font : t -> string -> unit) =
+          fun x128 ->
+            fun x127 ->
+              ignore
+                (Ojs.call (t_to_js x128) "font" [|(Ojs.string_to_js x127)|])
+        let (fillText : t -> string -> int -> int -> unit) =
+          fun x132 ->
+            fun x129 ->
+              fun x130 ->
+                fun x131 ->
+                  ignore
+                    (Ojs.call (t_to_js x132) "fillText"
+                       [|(Ojs.string_to_js x129);(Ojs.int_to_js x130);(
+                         Ojs.int_to_js x131)|])
       end
     type t = Ojs.t
-    let rec (t_of_js : Ojs.t -> t) = fun x111 -> x111
-    and (t_to_js : t -> Ojs.t) = fun x110 -> x110
+    let rec (t_of_js : Ojs.t -> t) = fun x134 -> x134
+    and (t_to_js : t -> Ojs.t) = fun x133 -> x133
     let (of_element : Element.t -> t) =
-      fun x112 -> t_of_js (Element.t_to_js x112)
+      fun x135 -> t_of_js (Element.t_to_js x135)
     let (get_context : t -> string -> Ojs.t) =
-      fun x114 ->
-        fun x113 ->
-          Ojs.call (t_to_js x114) "getContext" [|(Ojs.string_to_js x113)|]
+      fun x137 ->
+        fun x136 ->
+          Ojs.call (t_to_js x137) "getContext" [|(Ojs.string_to_js x136)|]
     let get_context_2d x = get_context x "2d"
   end
 let (window : Window.t) = Window.t_of_js (Ojs.get Ojs.global "window")
 let (document : Document.t) =
   Document.t_of_js (Ojs.get Ojs.global "document")
+let (document2 : Document2.t) =
+  Document2.t_of_js (Ojs.get Ojs.global "document2")

@@ -2,6 +2,8 @@
 
 <html>
   <head>
+    <title> ORush </title>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
     <style>
       canvas{
       border:3px solid #1212;
@@ -9,16 +11,29 @@
     </style>
   </head>
     <body>
-        <h1>ORush</h1>
+        <h1 id="h1">ORush</h1>
         <table>
           <tr> <td> <canvas id="port"></canvas> </td>
-          <td> <table align=center >
-            <tr> <td align=center colspan="2"> <button id="haut"> &uarr; </button> </td> </tr>
-            <tr> <td> <button id="gauche"> &larr; </button> </td>
-                <td> <button id="droite"> &rarr; </button> </td>
-            </tr>
-            <tr> <td align=center colspan="2"> <button id="bas"> &darr; </button> </td> </tr>
-          </table> </td>
+          <td>
+            <table align="top" border="2px solid">
+              <tr>
+                <td  align="center"> <textarea id="text" rows="10" cols="5" style="resize: none;"></textarea> </td>
+              </tr>
+              <tr> <td align=center> <button id="submit"> Add boats </button> </td> </tr>
+              <tr> <td> <table align=center>
+              <tr> <td align=center colspan="2"> <button id="haut"> &uarr; </button> </td> </tr>
+              <tr>
+                <td> <button id="gauche"> &larr; </button> </td>
+
+                  <td> <button id="droite"> &rarr; </button> </td>
+              </tr>
+              <tr> <td align=center colspan="2"> <button id="bas"> &darr; </button> </td> </tr>
+            </table> </td> </tr>
+            <tr> <td align=center> <button id="solve"> Solve </button> </td> </tr>
+            <tr> <td  align="center"> <button id="next"> Next </button>  <button id="finish"> Finish </button> </td> </tr>
+            <tr> <td align=center id="solution"> Solution : </td> </tr>
+            </table>
+        </td>
         </tr>
         </table>
     </body>
